@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Image Inspector</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --bg: #0a0a0a; }
+        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .box { border: 2px solid var(--neon); padding: 20px; border-radius: 15px; display: inline-block; min-width: 300px; }
+        pre { text-align: left; background: #1a1a1a; padding: 15px; border-radius: 5px; overflow-x: auto; color: #00ff00; font-size: 12px; }
+        input { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2 style="color: var(--neon)">Image Metadata Inspector</h2>
+    <input type="file" id="fileInput" accept="image/*">
+    <div id="output">Lade ein Bild hoch, um den "Quellcode" zu sehen...</div>
+</div>
+
+<script>
+    document.getElementById('fileInput').onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        EXIF.getData(file, function() {
+            const allMetaData = EXIF.getAllTags(this);
+            const output = document.getElementById('output');
+            
+            if (Object.keys(allMetaData).length > 0) {
+                output.innerHTML = "<h3>Gefundene Daten:</h3><pre>" + JSON.stringify(allMetaData, null, 2) + "</pre>";
+            } else {
+                output.innerHTML = "<p style='color:orange'>Keine Metadaten gefunden (wurden vermutlich gelöscht).</p>";
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
