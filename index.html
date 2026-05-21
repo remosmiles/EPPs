@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Für Frau Epp 🤫</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --text-color: #e0e0e0;
-            --accent-color: #ff2a5f;
-            --accent-hover: #ff4d79;
+            --accent-glow: #ff0044;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
         }
 
         body, html {
@@ -17,171 +17,330 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #050002;
+            color: var(--text-main);
+            font-family: 'Raleway', sans-serif;
+            overflow: hidden; /* Keine Scrollbalken */
+        }
+
+        /* Canvas für die fliegenden Funken */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container für den Inhalt (über den Funken) */
+        .container {
+            position: relative;
+            z-index: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
+        /* Die Glassmorphismus-Karten */
         .page {
-            display: none;
+            display: none; /* Standardmäßig versteckt */
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 90%;
-            max-width: 600px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.03);
+            width: 85%;
+            max-width: 650px;
+            padding: 50px 40px;
+            background: rgba(20, 5, 10, 0.4);
+            backdrop-filter: blur(15px); /* Milchglas-Effekt */
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 68, 0.15);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1s ease-in-out;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 0, 68, 0.05);
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .page.active {
             display: flex;
+            opacity: 1;
+            transform: scale(1);
+            animation: float 6s ease-in-out infinite;
         }
 
         h1 {
-            font-size: 2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
             margin-bottom: 20px;
-            background: -webkit-linear-gradient(45deg, #ff2a5f, #ff7b00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px var(--accent-glow);
         }
 
         p {
             font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #b3b3b3;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 40px;
         }
 
-        /* Das Schloss */
-        .lock-icon {
-            font-size: 5rem;
+        /* Das Schloss (SVG) */
+        .lock-container {
+            margin-top: 20px;
             cursor: pointer;
-            transition: transform 0.3s ease, text-shadow 0.3s ease;
-            user-select: none;
         }
 
-        .lock-icon:hover {
-            transform: scale(1.1) translateY(-10px);
-            text-shadow: 0 0 20px rgba(255, 42, 95, 0.6);
+        .lock-svg {
+            width: 80px;
+            height: 80px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+            transition: all 0.4s ease;
         }
 
-        /* Buttons */
+        .lock-container:hover .lock-svg {
+            stroke: var(--accent-glow);
+            filter: drop-shadow(0 0 25px var(--accent-glow));
+            transform: scale(1.1);
+        }
+
+        /* Buttons im Neon-Stil */
         .btn {
-            background-color: transparent;
-            color: var(--accent-color);
-            border: 2px solid var(--accent-color);
-            padding: 15px 30px;
+            background: transparent;
+            color: #fff;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 600;
             font-size: 1.1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            width: 80%;
-            max-width: 300px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
+            padding: 15px 40px;
+            margin: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            width: 80%;
+            max-width: 320px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 68, 0.4), transparent);
+            transition: all 0.4s ease;
         }
 
         .btn:hover {
-            background-color: var(--accent-color);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 42, 95, 0.5);
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 20px rgba(255, 0, 68, 0.5), inset 0 0 10px rgba(255, 0, 68, 0.2);
+            color: var(--accent-glow);
+            transform: translateY(-3px);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+            transition: all 0.6s ease;
+        }
+
+        /* Spezial-Button für "ALLES" */
+        .btn-pulse {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 15px rgba(255, 0, 68, 0.3);
+            animation: pulse 2s infinite;
         }
 
         .quote {
-            font-style: italic;
-            font-size: 1.4rem;
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
             color: #fff;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 15px;
-            text-align: left;
+            margin-bottom: 30px;
+            position: relative;
+            padding: 20px;
         }
+
+        .quote::before, .quote::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent-glow);
+            position: absolute;
+            opacity: 0.3;
+        }
+        .quote::before { top: -10px; left: -10px; }
+        .quote::after { bottom: -30px; right: 0px; }
 
         .wink {
-            font-size: 3rem;
-            margin-top: 20px;
-            animation: bounce 2s infinite;
+            font-size: 3.5rem;
+            margin-top: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Keyframes für weiche Animationen */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-15px); }
-            60% { transform: translateY(-7px); }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(255, 0, 68, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 68, 0.8), inset 0 0 15px rgba(255, 0, 68, 0.4); }
+            100% { box-shadow: 0 0 10px rgba(255, 0, 68, 0.4); }
         }
     </style>
 </head>
 <body>
 
-    <!-- SEITE 1: Begrüßung & Schloss -->
-    <div id="page1" class="page active">
-        <h1>Willkommen, Frau Epp.</h1>
-        <p>Bist du bereit? Hier können all deine wildesten und feuchtesten Träume wahr werden.<br><br>Aber bevor wir beginnen... du bist mein Geheimnis. Öffne das Schloss, wenn du dich traust.</p>
-        <div class="lock-icon" onclick="goToPage('page2')">🔒</div>
-    </div>
+    <canvas id="particles"></canvas>
 
-    <!-- SEITE 2: Das Geheimnis -->
-    <div id="page2" class="page">
-        <h1>Der Geheime Raum</h1>
-        <p>Was in diesem Raum passiert, bleibt exakt hier. <br>Niemand... wirklich <em>niemand</em> wird jemals auch nur ein einziges Sterbenswort erfahren. Es ist nur zwischen uns.</p>
-        <button class="btn" onclick="goToPage('page3')">In den Abgrund springen</button>
-    </div>
+    <div class="container">
+        <div id="page1" class="page active">
+            <h1>Willkommen, Frau Epp</h1>
+            <p>Bist du bereit? Hier können all deine wildesten und feuchtesten Träume wahr werden.<br><br>Aber bevor wir beginnen... du bist mein Geheimnis. Öffne das Schloss, wenn du dich traust.</p>
+            
+            <div class="lock-container" onclick="goToPage('page2')">
+                <svg class="lock-svg" viewBox="0 0 24 24">
+                    <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    <circle cx="12" cy="16" r="1"></circle>
+                </svg>
+            </div>
+        </div>
 
-    <!-- SEITE 3: Der Abgrund (Die Auswahl) -->
-    <div id="page3" class="page">
-        <h1>Der Tiefe Abgrund</h1>
-        <p>Du bist zu weit gegangen, um jetzt noch umzukehren. Wähle dein Schicksal weise, freche Kollegin:</p>
-        <button class="btn" onclick="goToPage('page-delete')">Kontakt löschen</button>
-        <button class="btn" onclick="goToPage('page-write')">Nur Schreiben</button>
-        <button class="btn" onclick="goToPage('page-all')">ALLES</button>
-    </div>
+        <div id="page2" class="page">
+            <h1>Der Geheime Raum</h1>
+            <p>Was in diesem Raum passiert, bleibt exakt hier.<br>Niemand... wirklich <em>niemand</em> wird jemals auch nur ein einziges Sterbenswort erfahren. Es bleibt nur zwischen uns.</p>
+            <button class="btn" onclick="goToPage('page3')">In den Abgrund springen</button>
+        </div>
 
-    <!-- SEITE 4a: Kontakt löschen -->
-    <div id="page-delete" class="page">
-        <div class="quote">"Manchmal ist ein sauberer Schnitt das Beste... aber wir wissen beide, dass du das nicht wirklich willst."</div>
-        <p>Spielverderberin. Aber gut... dein Wunsch ist mir Befehl.</p>
-        <div class="wink">😉</div>
-        <button class="btn" onclick="goToPage('page3')">Zurück (Falls du es dir anders überlegst...)</button>
-    </div>
+        <div id="page3" class="page">
+            <h1>Der Tiefe Abgrund</h1>
+            <p>Du bist zu weit gegangen, um jetzt noch umzukehren.<br>Wähle dein Schicksal weise, freche Kollegin:</p>
+            <button class="btn" onclick="goToPage('page-delete')">Kontakt löschen</button>
+            <button class="btn" onclick="goToPage('page-write')">Nur Schreiben</button>
+            <button class="btn btn-pulse" onclick="goToPage('page-all')">ALLES</button>
+        </div>
 
-    <!-- SEITE 4b: Nur Schreiben -->
-    <div id="page-write" class="page">
-        <div class="quote">"Worte sind das gefährlichste Vorspiel für den Geist. Lass uns sehen, wer von uns zuerst errötet."</div>
-        <p>Ein sicherer Hafen, aber mit genug Spielraum für die Fantasie. Ich freue mich auf deine Nachrichten, Frau Epp.</p>
-        <div class="wink">😉</div>
-    </div>
+        <div id="page-delete" class="page">
+            <div class="quote">Manchmal ist ein sauberer Schnitt das Beste... aber wir wissen beide, dass du das nicht wirklich willst.</div>
+            <p>Spielverderberin. Aber gut... dein Wunsch ist mir Befehl.</p>
+            <div class="wink">😏</div>
+            <br>
+            <button class="btn" onclick="goToPage('page3')">Zurück (Falls du dich traust...)</button>
+        </div>
 
-    <!-- SEITE 4c: ALLES -->
-    <div id="page-all" class="page">
-        <div class="quote">"Ganz oder gar nicht. Wer den Abgrund wählt, muss bereit sein, zu fallen."</div>
-        <p>Eine hervorragende Wahl. Schnall dich an, wilde Frau Epp... es wird wild. Sehr wild.</p>
-        <div class="wink">😉✨</div>
+        <div id="page-write" class="page">
+            <div class="quote">Worte sind das gefährlichste Vorspiel für den Geist. Lass uns sehen, wer zuerst errötet.</div>
+            <p>Ein sicherer Hafen, aber mit genug Spielraum für die Fantasie. Ich freue mich auf deine Nachrichten.</p>
+            <div class="wink">🤫</div>
+        </div>
+
+        <div id="page-all" class="page">
+            <div class="quote">Ganz oder gar nicht. Wer den Abgrund wählt, muss bereit sein, zu fallen.</div>
+            <p>Eine hervorragende Wahl. Schnall dich an, wilde Frau Epp... es wird grenzenlos.</p>
+            <div class="wink">🔥</div>
+        </div>
     </div>
 
     <script>
+        // --- LOGIK FÜR DEN SEITENWECHSEL ---
         function goToPage(pageId) {
-            // Alle Seiten verstecken
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+            const pages = document.querySelectorAll('.page');
+            
+            // Aktuelle Seite ausblenden
+            pages.forEach(page => {
+                if(page.classList.contains('active')) {
+                    page.style.opacity = '0';
+                    page.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        page.classList.remove('active');
+                    }, 500); // Warten bis Animation fertig ist
+                }
             });
             
-            // Die gewünschte Seite anzeigen
-            document.getElementById(pageId).classList.add('active');
+            // Neue Seite einblenden (mit leichter Verzögerung für den Drama-Effekt)
+            setTimeout(() => {
+                const targetPage = document.getElementById(pageId);
+                targetPage.classList.add('active');
+                // Ein kleiner Timeout, damit der Browser die CSS-Klassen registriert, bevor animiert wird
+                setTimeout(() => {
+                    targetPage.style.opacity = '1';
+                    targetPage.style.transform = 'scale(1)';
+                }, 50);
+            }, 500);
         }
+
+        // --- LOGIK FÜR DIE FLIEGENDEN FUNKEN (CANVAS) ---
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', setCanvasSize);
+        setCanvasSize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * -2 - 1;
+                this.color = `rgba(255, ${Math.random() * 100}, ${Math.random() * 50}, ${Math.random() * 0.8 + 0.2})`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                // Wenn Partikel oben verschwindet, unten neu spawnen
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.width * canvas.height) / 8000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
     </script>
 </body>
 </html>
