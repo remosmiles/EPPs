@@ -2,41 +2,186 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Neon Image Inspector</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Für Frau Epp 🤫</title>
     <style>
-        :root { --neon: #00f2ff; --bg: #0a0a0a; }
-        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .box { border: 2px solid var(--neon); padding: 20px; border-radius: 15px; display: inline-block; min-width: 300px; }
-        pre { text-align: left; background: #1a1a1a; padding: 15px; border-radius: 5px; overflow-x: auto; color: #00ff00; font-size: 12px; }
-        input { margin-bottom: 20px; }
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #ff2a5f;
+            --accent-hover: #ff4d79;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(45deg, #ff2a5f, #ff7b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #b3b3b3;
+        }
+
+        /* Das Schloss */
+        .lock-icon {
+            font-size: 5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            user-select: none;
+        }
+
+        .lock-icon:hover {
+            transform: scale(1.1) translateY(-10px);
+            text-shadow: 0 0 20px rgba(255, 42, 95, 0.6);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            width: 80%;
+            max-width: 300px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 42, 95, 0.5);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+            text-align: left;
+        }
+
+        .wink {
+            font-size: 3rem;
+            margin-top: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2 style="color: var(--neon)">Image Metadata Inspector</h2>
-    <input type="file" id="fileInput" accept="image/*">
-    <div id="output">Lade ein Bild hoch, um den "Quellcode" zu sehen...</div>
-</div>
+    <!-- SEITE 1: Begrüßung & Schloss -->
+    <div id="page1" class="page active">
+        <h1>Willkommen, Frau Epp.</h1>
+        <p>Bist du bereit? Hier können all deine wildesten und feuchtesten Träume wahr werden.<br><br>Aber bevor wir beginnen... du bist mein Geheimnis. Öffne das Schloss, wenn du dich traust.</p>
+        <div class="lock-icon" onclick="goToPage('page2')">🔒</div>
+    </div>
 
-<script>
-    document.getElementById('fileInput').onchange = function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+    <!-- SEITE 2: Das Geheimnis -->
+    <div id="page2" class="page">
+        <h1>Der Geheime Raum</h1>
+        <p>Was in diesem Raum passiert, bleibt exakt hier. <br>Niemand... wirklich <em>niemand</em> wird jemals auch nur ein einziges Sterbenswort erfahren. Es ist nur zwischen uns.</p>
+        <button class="btn" onclick="goToPage('page3')">In den Abgrund springen</button>
+    </div>
 
-        EXIF.getData(file, function() {
-            const allMetaData = EXIF.getAllTags(this);
-            const output = document.getElementById('output');
+    <!-- SEITE 3: Der Abgrund (Die Auswahl) -->
+    <div id="page3" class="page">
+        <h1>Der Tiefe Abgrund</h1>
+        <p>Du bist zu weit gegangen, um jetzt noch umzukehren. Wähle dein Schicksal weise, freche Kollegin:</p>
+        <button class="btn" onclick="goToPage('page-delete')">Kontakt löschen</button>
+        <button class="btn" onclick="goToPage('page-write')">Nur Schreiben</button>
+        <button class="btn" onclick="goToPage('page-all')">ALLES</button>
+    </div>
+
+    <!-- SEITE 4a: Kontakt löschen -->
+    <div id="page-delete" class="page">
+        <div class="quote">"Manchmal ist ein sauberer Schnitt das Beste... aber wir wissen beide, dass du das nicht wirklich willst."</div>
+        <p>Spielverderberin. Aber gut... dein Wunsch ist mir Befehl.</p>
+        <div class="wink">😉</div>
+        <button class="btn" onclick="goToPage('page3')">Zurück (Falls du es dir anders überlegst...)</button>
+    </div>
+
+    <!-- SEITE 4b: Nur Schreiben -->
+    <div id="page-write" class="page">
+        <div class="quote">"Worte sind das gefährlichste Vorspiel für den Geist. Lass uns sehen, wer von uns zuerst errötet."</div>
+        <p>Ein sicherer Hafen, aber mit genug Spielraum für die Fantasie. Ich freue mich auf deine Nachrichten, Frau Epp.</p>
+        <div class="wink">😉</div>
+    </div>
+
+    <!-- SEITE 4c: ALLES -->
+    <div id="page-all" class="page">
+        <div class="quote">"Ganz oder gar nicht. Wer den Abgrund wählt, muss bereit sein, zu fallen."</div>
+        <p>Eine hervorragende Wahl. Schnall dich an, wilde Frau Epp... es wird wild. Sehr wild.</p>
+        <div class="wink">😉✨</div>
+    </div>
+
+    <script>
+        function goToPage(pageId) {
+            // Alle Seiten verstecken
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
             
-            if (Object.keys(allMetaData).length > 0) {
-                output.innerHTML = "<h3>Gefundene Daten:</h3><pre>" + JSON.stringify(allMetaData, null, 2) + "</pre>";
-            } else {
-                output.innerHTML = "<p style='color:orange'>Keine Metadaten gefunden (wurden vermutlich gelöscht).</p>";
-            }
-        });
-    };
-</script>
-
+            // Die gewünschte Seite anzeigen
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
